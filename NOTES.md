@@ -4,7 +4,8 @@
 - **Mục tiêu**: Ôn tập & nâng cao kiến thức Next.js sâu sắc để phỏng vấn vị trí Middle/Senior.
 - **Trình độ**: Đã có nền React/Next.js cơ bản, tư duy lập trình tốt.
 - **Quy tắc Git quan trọng**:
-  - **Học bài nào thì checkout nhánh của bài đó trước** (ví dụ: `lesson-00` hoặc `bai-00`, `lesson-01`, `lesson-02`...) trước khi thực hành/code.
+  - **Học bài nào thì checkout nhánh của bài đó trước** (ví dụ: `bai-00`, `bai-01`, `bai-02`...) trước khi học/thực hành.
+  - **Commit message luôn viết bằng tiếng Anh** chuẩn Conventional Commits (ví dụ: `feat(lesson-00): ...`, `docs(roadmap): ...`).
 - **Phong cách học**:
   - Học sâu bản chất & lý do thiết kế (Why & Tradeoffs), ghét học vẹt.
   - Chọn **không làm dự án lớn song song** để đi nhanh, tập trung trọn vẹn vào từng khái niệm phỏng vấn + bài tập sân tập gói gọn.
