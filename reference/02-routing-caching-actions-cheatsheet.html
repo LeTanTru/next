@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheat-Sheet 02 · Routing, Caching & Server Actions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lessons/lesson.css">
+<style>
+  .cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 768px) { .cs-grid { grid-template-columns: 1fr; } }
+  .cs-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .cs-card h3 { margin-top: 0; font-size: 1.1rem; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .cs-card ul { padding-left: 18px; margin-bottom: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="lesson-tag">⚡ Quick Reference · Senior Interview Cheat-Sheet</span>
+  <h1>Routing, 4-Tier Cache & Server Actions</h1>
+  <p class="subtitle">Bảng tra cứu nhanh về Parallel/Intercepting Routes, 4 tầng Cache và Server Actions trong React 19.</p>
+
+  <div class="cs-grid">
+    <div class="cs-card">
+      <h3>1. Advanced Routing Patterns</h3>
+      <ul>
+        <li><strong>Parallel Routes (`@slot`)</strong>: Render nhiều slots đồng thời trong 1 layout. Cần `default.tsx` fallback.</li>
+        <li><strong>Intercepting Routes (`(.)route`)</strong>: Chặn điều hướng soft-navigation (Modal view) nhưng giữ full-page trên hard-navigation.</li>
+        <li><strong>Route Handlers (`route.ts`)</strong>: Web Standard GET, POST, PUT, DELETE. Không để chung `page.tsx`.</li>
+        <li><strong>Middleware (`middleware.ts`)</strong>: Edge Auth guard, Headers mutation, Redirects.</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>2. The 4-Tier Caching System</h3>
+      <ul>
+        <li><strong>1. Request Memoization</strong>: Server in-memory, deduplicate `fetch` trong 1 request lifecycle.</li>
+        <li><strong>2. Data Cache</strong>: Server persistent, cache `fetch` qua nhiều requests. Invalidate: `revalidateTag()`.</li>
+        <li><strong>3. Full Route Cache</strong>: Server HTML & RSC Payload của static pages.</li>
+        <li><strong>4. Router Cache</strong>: Client tab in-memory. Invalidate: `router.refresh()` hoặc `revalidatePath()`.</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>3. Server Actions & React 19 Hooks</h3>
+      <ul>
+        <li><strong>`'use server'`</strong>: Hàm async chạy ở Server, biến thành HTTP POST Endpoint ngầm.</li>
+        <li><strong>`useActionState`</strong>: Quản lý Form state, error messages từ Server Action.</li>
+        <li><strong>`useOptimistic`</strong>: Giả lập update UI ngay tức thì trước khi Server phản hồi (auto rollback).</li>
+        <li><strong>Form Security</strong>: Bắt buộc Auth Check & Zod Validation bên trong Server Action!</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>4. State Management Strategy</h3>
+      <ul>
+        <li><strong>URL State (SearchParams)</strong>: Single Source of Truth cho Pagination, Search, Filtering.</li>
+        <li><strong>Server State</strong>: Quản lý tự động bằng Server Component Fetch & Caching.</li>
+        <li><strong>Client State (Zustand/useState)</strong>: Chỉ dành cho Transient UI State (Modal, Form draft, Theme).</li>
+        <li><strong>Root Context Pattern</strong>: Bọc Provider Client Component trong `app/layout.tsx` Server Component.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Bí Quyết Phỏng Vấn (Senior Cheat-Sheet)</h2>
+
+  <div class="callout why">
+    <div class="ct">🎯 3 Bẫy phỏng vấn thường gặp:</div>
+    <p>1. <strong>"Xóa item DB xong nhưng trang back lại vẫn thấy?"</strong> -> Do Router Cache ở Client Tab. Fix: Call <code>revalidatePath()</code> hoặc <code>router.refresh()</code>.<br><br>
+    2. <strong>"Có nên dùng Prisma trực tiếp ở Edge Runtime?"</strong> -> KHÔNG! Edge V8 Worker không có TCP Connection Pool truyền thống, dễ làm quá tải DB.<br><br>
+    3. <strong>"Tại sao nên đẩy State Search/Filter lên URL?"</strong> -> Bookmark được, Shareable URL, và giúp Server Component fetch dữ liệu tĩnh ngay từ Server.</p>
+  </div>
+
+  <div class="navbar">
+    <a href="../lessons/index.html">🏠 Về Mục Lục Khóa Học</a>
+  </div>
+
+</div>
+</body>
+</html>

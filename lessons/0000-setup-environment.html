@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bài 00: Dựng Sân Tập Next.js 16 & Sanity Check Môi Trường</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="lesson.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="meta-line">
+        <span class="lesson-tag">⚡ Module 0 · Bài 00 / 21</span>
+      </div>
+
+      <h1>Dựng Sân Tập Next.js 16 & Sanity Check Môi Trường</h1>
+      <p class="subtitle">
+        Thiết lập nền móng thực hành thực tế với Next.js 16.3, React 19.2,
+        Turbopack Bundler & TypeScript Strict.
+      </p>
+      <p class="meta-line">
+        Thời lượng ước tính: 15–20 phút · Yêu cầu: Node.js &ge; 20.9.0, npm &ge;
+        10.0
+      </p>
+
+      <div class="callout bridge">
+        <div class="ct">🌉 Tại sao bắt đầu bằng Sân Tập Môi Trường?</div>
+        <p>
+          Trong phỏng vấn Senior/Tech Lead, người phỏng vấn không chỉ hỏi lý
+          thuyết suông mà còn quan sát
+          <strong
+            >cách bạn thiết lập dự án, hiểu về build pipeline, compiler và khả
+            năng debug môi trường thực tế</strong
+          >. Dự án <code>next-practice</code> này sẽ là phòng thí nghiệm
+          (sandbox) xuyên suốt 21 bài học tiếp theo để kiểm chứng từng cơ chế:
+          RSC wire format, <code>"use cache"</code>, <code>updateTag()</code>,
+          <code>proxy.ts</code>, Streaming và Security.
+        </p>
+      </div>
+
+      <h2>1. Kiểm Tra Tiền Đề Trên Máy Thật</h2>
+      <p>
+        Next.js 16 đặt ra yêu cầu nền tảng tối thiểu:
+        <strong>Node.js &ge; 20.9.0</strong> và
+        <strong>TypeScript &ge; 5.1.0</strong> để tương thích với kiến trúc
+        Async Request APIs và Turbopack engine viết bằng Rust.
+      </p>
+
+      <div class="callout tip">
+        <div class="ct">🔍 Đã kiểm tra môi trường trên máy bạn:</div>
+        <ul>
+          <li>
+            <strong>Node.js:</strong> <code>v22.22.2</code> (Thỏa mãn &ge;
+            20.9.0)
+          </li>
+          <li>
+            <strong>npm:</strong> <code>11.4.2</code> (Thỏa mãn &ge; 10.0)
+          </li>
+          <li><strong>Git:</strong> <code>2.49.0</code></li>
+        </ul>
+      </div>
+
+      <h2>2. Từng Bước Khởi Tạo Sân Tập (Step-by-Step)</h2>
+
+      <h3>Bước 1: Tạo dự án Next.js 16 bằng CLI chính thức</h3>
+      <p>
+        Chạy lệnh dưới đây ngay trong thư mục workspace để tạo project
+        <code>next-practice</code> với đầy đủ cấu hình chuẩn hiện đại:
+      </p>
+
+      <div class="code-block">
+        <div class="code-label"><span>powershell / bash</span></div>
+        <pre><code><span class="cmt"># Khởi tạo dự án Next.js 16.3 với TypeScript, Tailwind v4, App Router và Turbopack</span>
+<span class="fn">npx</span> --yes create-next-app@16.3.3 next-practice --typescript --tailwind --eslint --app --src-dir --import-alias <span class="str">"@/*"</span> --use-npm --turbopack --yes</code></pre>
+      </div>
+
+      <div class="callout why">
+        <div class="ct">💡 Vì sao chọn các cờ (flags) này?</div>
+        <ul>
+          <li>
+            <code>--turbopack</code>: Kích hoạt engine Turbopack làm bundler mặc
+            định của Next.js 16, mang lại tốc độ compile nhanh hơn 2–5x so với
+            Webpack.
+          </li>
+          <li>
+            <code>--src-dir</code>: Tách biệt mã nguồn ứng dụng
+            (<code>src/app</code>, <code>src/components</code>) khỏi các file
+            cấu hình root (<code>package.json</code>,
+            <code>tsconfig.json</code>, <code>next.config.ts</code>). Đây là
+            pattern bắt buộc trong các dự án enterprise quy mô lớn.
+          </li>
+          <li>
+            <code>--import-alias "@/*"</code>: Định nghĩa đường dẫn tuyệt đối từ
+            thư mục <code>src/</code>, tránh anti-pattern import tương đối sâu
+            <code>../../../../</code>.
+          </li>
+        </ul>
+      </div>
+
+      <h3>Bước 2: Di chuyển vào thư mục và kiểm tra dependencies</h3>
+      <div class="code-block">
+        <div class="code-label"><span>powershell / bash</span></div>
+        <pre><code><span class="cmt"># Chuyển vào thư mục sân tập</span>
+<span class="kw">cd</span> next-practice
+
+<span class="cmt"># Xem danh sách dependencies chính trong package.json</span>
+<span class="fn">npm</span> pkg get dependencies devDependencies</code></pre>
+      </div>
+
+      <p>Bạn sẽ thấy các package cốt lõi của hệ sinh thái mới nhất:</p>
+      <ul>
+        <li><code>next</code>: <code>^16.3.3</code> (Framework)</li>
+        <li>
+          <code>react</code> & <code>react-dom</code>:
+          <code>^19.2.8</code> (React 19 Core)
+        </li>
+        <li>
+          <code>babel-plugin-react-compiler</code>: Hỗ trợ tự động tối ưu hóa
+          re-render
+        </li>
+        <li>
+          <code>@tailwindcss/postcss</code> & <code>tailwindcss</code>: Tailwind
+          CSS v4 engine mới
+        </li>
+      </ul>
+
+      <h3>Bước 3: Viết Trang Sanity Check (Kiểm tra RSC & Server Runtime)</h3>
+      <p>
+        Mở file <code>src/app/page.tsx</code> và thay thế toàn bộ nội dung bằng
+        đoạn code kiểm thử dưới đây để xác nhận
+        <strong>React Server Component (RSC)</strong> hoạt động hoàn hảo trên
+        server:
+      </p>
+
+      <div class="code-block">
+        <div class="code-label"><span>src/app/page.tsx</span></div>
+        <pre><code><span class="cmt">// Trang Home — Mặc định là React Server Component (chạy trên Node.js server)</span>
+<span class="kw">import</span> { Suspense } <span class="kw">from</span> <span class="str">"react"</span>;
+
+<span class="cmt">// Component kiểm tra Async RSC data fetching</span>
+<span class="kw">async function</span> <span class="fn">ServerDiagnostic</span>() {
+  <span class="cmt">// Giả lập một tác vụ async trên server</span>
+  <span class="kw">const</span> serverTime = <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toLocaleTimeString</span>(<span class="str">"vi-VN"</span>);
+  <span class="kw">const</span> nodeVersion = process.version;
+  <span class="kw">const</span> envMode = process.env.NODE_ENV;
+
+  <span class="kw">return</span> (
+    &lt;<span class="kw">div</span> className=<span class="str">"p-6 bg-slate-800/80 border border-slate-700 rounded-xl space-y-3"</span>&gt;
+      &lt;<span class="kw">h2</span> className=<span class="str">"text-xl font-semibold text-sky-400"</span>&gt;🟢 Server Runtime Diagnostic&lt;/<span class="kw">h2</span>&gt;
+      &lt;<span class="kw">ul</span> className=<span class="str">"text-sm space-y-1 text-slate-300 font-mono"</span>&gt;
+        &lt;<span class="kw">li</span>&gt;&bull; Server Render Time: &lt;<span class="kw">span</span> className=<span class="str">"text-emerald-400"</span>&gt;{serverTime}&lt;/<span class="kw">span</span>&gt;&lt;/<span class="kw">li</span>&gt;
+        &lt;<span class="kw">li</span>&gt;&bull; Node.js Version: &lt;<span class="kw">span</span> className=<span class="str">"text-amber-400"</span>&gt;{nodeVersion}&lt;/<span class="kw">span</span>&gt;&lt;/<span class="kw">li</span>&gt;
+        &lt;<span class="kw">li</span>&gt;&bull; Environment: &lt;<span class="kw">span</span> className=<span class="str">"text-purple-400"</span>&gt;{envMode}&lt;/<span class="kw">span</span>&gt;&lt;/<span class="kw">li</span>&gt;
+        &lt;<span class="kw">li</span>&gt;&bull; Component Type: &lt;<span class="kw">span</span> className=<span class="str">"text-sky-300"</span>&gt;React Server Component (Zero Client JS)&lt;/<span class="kw">span</span>&gt;&lt;/<span class="kw">li</span>&gt;
+      &lt;/<span class="kw">ul</span>&gt;
+    &lt;/<span class="kw">div</span>&gt;
+  );
+}
+
+<span class="kw">export default function</span> <span class="fn">HomePage</span>() {
+  <span class="kw">return</span> (
+    &lt;<span class="kw">main</span> className=<span class="str">"min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-8"</span>&gt;
+      &lt;<span class="kw">div</span> className=<span class="str">"max-w-xl w-full space-y-6"</span>&gt;
+        &lt;<span class="kw">div</span> className=<span class="str">"text-center space-y-2"</span>&gt;
+          &lt;<span class="kw">h1</span> className=<span class="str">"text-3xl font-bold tracking-tight text-white"</span>&gt;
+            Next.js 16 Sân Tập Thực Hành
+          &lt;/<span class="kw">h1</span>&gt;
+          &lt;<span class="kw">p</span> className=<span class="str">"text-slate-400 text-sm"</span>&gt;
+            Môi trường sẵn sàng cho lộ trình Next.js Middle / Senior Interview Mastery.
+          &lt;/<span class="kw">p</span>&gt;
+        &lt;/<span class="kw">div</span>&gt;
+
+        &lt;<span class="fn">Suspense</span> fallback={&lt;<span class="kw">div</span> className=<span class="str">"text-slate-500 font-mono"</span>&gt;Đang render server...&lt;/<span class="kw">div</span>&gt;}&gt;
+          &lt;<span class="fn">ServerDiagnostic</span> /&gt;
+        &lt;/<span class="fn">Suspense</span>&gt;
+      &lt;/<span class="kw">div</span>&gt;
+    &lt;/<span class="kw">main</span>&gt;
+  );
+}</code></pre>
+      </div>
+
+      <h3>Bước 4: Sanity Check Build Production với Turbopack</h3>
+      <p>
+        Chạy lệnh build để xác nhận TypeScript, Tailwind v4 và Turbopack compile
+        thành công không có lỗi:
+      </p>
+
+      <div class="code-block">
+        <div class="code-label"><span>powershell / bash</span></div>
+        <pre><code><span class="fn">npm</span> run build</code></pre>
+      </div>
+
+      <p>Output kỳ vọng xuất hiện dòng xác nhận Turbopack:</p>
+      <div class="code-block">
+        <div class="code-label"><span>build terminal output</span></div>
+        <pre><code>▲ Next.js 16.3.3 (Turbopack)
+✓ Running next.config.ts took 32ms
+  Creating an optimized production build ...
+✓ Compiled successfully
+  Running TypeScript ...
+✓ Generating static pages (4/4)
+Route (app)
+┌ ○ /
+└ ○ /_not-found</code></pre>
+      </div>
+
+      <h3>Bước 5: Khởi động Dev Server & Mở trình duyệt</h3>
+      <div class="code-block">
+        <div class="code-label"><span>powershell / bash</span></div>
+        <pre><code><span class="fn">npm</span> run dev</code></pre>
+      </div>
+      <p>
+        Mở trình duyệt tại <code>http://localhost:3000</code> — bạn sẽ thấy card
+        chẩn đoán <strong>Server Runtime Diagnostic</strong> hiển thị đúng Node
+        22 và thời gian server render!
+      </p>
+
+      <h2>3. Góc Phỏng Vấn (Senior Deep-Dive)</h2>
+
+      <div class="callout tip">
+        <div class="ct">
+          🎯 Câu hỏi phỏng vấn 1: "Tại sao Next.js 16 chuyển sang dùng Turbopack
+          làm mặc định thay vì Webpack?"
+        </div>
+        <p><strong>Trả lời ngắn gọn & bản chất:</strong></p>
+        <ul>
+          <li>
+            <strong>Ngôn ngữ & Kiến trúc:</strong> Webpack viết bằng JavaScript,
+            xử lý AST và graph trên Single-thread V8. Turbopack được viết hoàn
+            toàn bằng <strong>Rust</strong> trên nền tảng kiến trúc tính toán
+            gia tăng (Incremental Computation Engine - Turbo Engine), hỗ trợ xử
+            lý đa luồng (multi-threaded).
+          </li>
+          <li>
+            <strong>Function-level Caching:</strong> Turbopack không bao giờ
+            tính toán lại những gì nó đã xử lý. Nếu sửa 1 file, nó chỉ
+            re-evaluate đúng hàm bị thay đổi, giúp Fast Refresh đạt tốc độ gần
+            như tức thì (&lt; 10ms kể cả dự án lớn).
+          </li>
+          <li>
+            <strong>File System Caching (Next.js 16):</strong> Turbopack lưu
+            cache biên dịch xuống ổ đĩa, giúp cold-start lần khởi động tiếp theo
+            nhanh hơn 400%.
+          </li>
+        </ul>
+      </div>
+
+      <div class="callout warn">
+        <div class="ct">
+          🎯 Câu hỏi phỏng vấn 2: "Tại sao trong dự án Next.js production, dev
+          tuyệt đối KHÔNG ĐƯỢC chỉ test bằng 'npm run dev' mà bắt buộc phải test
+          'npm run build &amp;&amp; npm start' trước khi release?"
+        </div>
+        <p><strong>Trả lời:</strong></p>
+        <ul>
+          <li>
+            <code>npm run dev</code> luôn luôn chạy ở chế độ Dynamic (on-demand
+            compile từng trang khi request tới), bỏ qua nhiều tối ưu hóa static,
+            và không kiểm tra đầy đủ các lỗi liên quan đến
+            <strong
+              >Prerender Bailout, Static Export errors, hoặc Serialization
+              boundaries</strong
+            >
+            giữa RSC và Client.
+          </li>
+          <li>
+            Chỉ khi chạy <code>npm run build</code>, Next.js mới thực sự phân
+            tích toàn bộ cây Route (Static vs Dynamic vs Cached), kiểm tra
+            TypeScript nghiêm ngặt, đóng gói bundle client và phát hiện sớm các
+            lỗi Hydration hoặc biến môi trường bị thiếu trên Server.
+          </li>
+        </ul>
+      </div>
+
+      <h2>4. Quiz Kiểm Tra Nhanh (Spaced Recall)</h2>
+
+      <div class="quiz">
+        <h3>Kiểm tra mức độ hiểu sâu về Môi trường & Turbopack</h3>
+        <p class="q">
+          Trong Next.js 16, đoạn code <code>process.env.MY_SECRET_KEY</code> đặt
+          trong một React Server Component (không có tiền tố
+          <code>NEXT_PUBLIC_</code>) có bị lộ xuống bundle JavaScript của trình
+          duyệt không?
+        </p>
+
+        <button
+          class="opt"
+          data-correct="true"
+          data-explain="Chính xác! React Server Components (RSC) chỉ thực thi trên server và gửi HTML + RSC Payload về client. Biến môi trường không có tiền tố NEXT_PUBLIC_ sẽ an toàn tuyệt đối trên server, không bị đính kèm vào client bundle."
+        >
+          A. Không bao giờ lộ, vì RSC chỉ thực thi trên Server và không gửi mã
+          nguồn JS về Client.
+        </button>
+
+        <button
+          class="opt"
+          data-correct="false"
+          data-explain="Sai! Tiền tố NEXT_PUBLIC_ chỉ bắt buộc khi bạn muốn public biến đó xuống Client Component qua window / client bundle. Trong Server Component, process.env đọc trực tiếp từ server process."
+        >
+          B. Có bị lộ, nếu không khai báo trong next.config.ts.
+        </button>
+
+        <button
+          class="opt"
+          data-correct="false"
+          data-explain="Sai! Tiền tố NEXT_PUBLIC_ là để public ra client, còn biến bí mật thì không được dùng NEXT_PUBLIC_."
+        >
+          C. Có bị lộ trừ khi có tiền tố NEXT_PUBLIC_.
+        </button>
+
+        <div class="feedback"></div>
+      </div>
+
+      <h2>5. Checklist Tự Kiểm Tra Trước Khi Sang Bài 01</h2>
+      <ul class="checklist">
+        <li>
+          Đã tạo thư mục <code>next-practice</code> với Next.js 16.3 và React
+          19.2.
+        </li>
+        <li>
+          File <code>src/app/page.tsx</code> đã chạy thành công và hiển thị card
+          chẩn đoán Server Runtime.
+        </li>
+        <li>
+          Lệnh <code>npm run build</code> chạy pass 100% với thông báo
+          <code>▲ Next.js 16.3.3 (Turbopack)</code>.
+        </li>
+        <li>
+          Hiểu rõ vì sao phải dùng <code>src/</code> directory và cờ
+          <code>--turbopack</code>.
+        </li>
+      </ul>
+
+      <div class="callout bridge">
+        <div class="ct">🧠 Câu hỏi tư duy chuyển giao sang Bài 01:</div>
+        <p>
+          Tại sao trước đây trong Pages Router chúng ta dùng
+          <code>getServerSideProps</code> và <code>getStaticProps</code> ở cấp
+          độ từng Trang (Page-level), nhưng trong App Router của Next.js 16, mô
+          hình này bị khai tử hoàn toàn để nhường chỗ cho React Server
+          Components ở cấp độ từng Component? Đánh đổi kiến trúc đằng sau là gì?
+        </p>
+      </div>
+
+      <div class="next-box">
+        <div class="nl">→ Bài tiếp theo</div>
+        <div class="nt">
+          Bài 01: App Router vs Pages Router Architecture: Sự Thay Đổi Paradigm
+          & Request Lifecycle trong Next.js 16
+        </div>
+        <p class="nd">
+          Giải phẫu kiến trúc Component-centric, Request Lifecycle trên Server
+          và chiến lược tư vấn migration cho doanh nghiệp.
+        </p>
+      </div>
+
+      <div class="navbar">
+        <a class="disabled" href="#">← Trước</a>
+        <a href="index.html">🏠 Mục lục</a>
+        <a class="disabled" href="#">Sau →</a>
+      </div>
+    </div>
+
+    <script src="lesson-enhance.js"></script>
+  </body>
+</html>

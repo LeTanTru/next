@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheat-Sheet 04 · System Design & Live Coding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lessons/lesson.css">
+<style>
+  .cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 768px) { .cs-grid { grid-template-columns: 1fr; } }
+  .cs-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .cs-card h3 { margin-top: 0; font-size: 1.1rem; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .cs-card ul { padding-left: 18px; margin-bottom: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="lesson-tag">⚡ Quick Reference · Senior Interview Cheat-Sheet</span>
+  <h1>System Design & Live Coding Refactoring</h1>
+  <p class="subtitle">Bảng tra cứu tổng kết cho bài thi phỏng vấn System Design và Live Coding Challenge.</p>
+
+  <div class="cs-grid">
+    <div class="cs-card">
+      <h3>1. E-Commerce Rendering Matrix</h3>
+      <ul>
+        <li><strong>Home & Category</strong>: ISR (`revalidate = 3600`) + Tag-based revalidation.</li>
+        <li><strong>Product Detail</strong>: PPR (Static Shell CDN 0ms + Dynamic Stock Hole).</li>
+        <li><strong>Cart & Checkout</strong>: Dynamic SSR + HttpOnly Cookies.</li>
+        <li><strong>Dashboard Admin</strong>: Dynamic SSR + Granular Suspense Streaming.</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>2. Infrastructure & Scalability</h3>
+      <ul>
+        <li><strong>Database Proxy</strong>: Bắt buộc dùng PgBouncer / Prisma Accelerate chống sập connection pool khi Serverless scale.</li>
+        <li><strong>Multi-tier Cache</strong>: Next.js Data Cache + Redis KV Store.</li>
+        <li><strong>Edge Middleware</strong>: Routing, Geo-IP, A/B Testing tại CDN POPs.</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>3. Checklist Code Refactoring</h3>
+      <ul>
+        <li>❌ Bỏ `'use client'` ở Root Page -> Chuyển thành Server Component.</li>
+        <li>❌ Xóa `useEffect` fetch data -> Chuyển sang `async/await` fetch ở Server Component.</li>
+        <li>❌ Không đọc `localStorage` -> Đổi sang HttpOnly Cookie.</li>
+        <li>✅ Bọc phần UI chậm trong `<Suspense fallback={...}>` để triệt tiêu Waterfall.</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>4. Top Senior Mindset Rules</h3>
+      <ul>
+        <li>1. Luôn giải thích **Why & Tradeoffs** trước khi nêu giải pháp.</li>
+        <li>2. Ưu tiên giữ code trên Server (0KB Client JS).</li>
+        <li>3. Sử dụng URL làm Single Source of Truth cho State có tính chia sẻ.</li>
+        <li>4. Bảo mật Secrets với package `server-only`.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Chúc Bạn Giành Chiến Thắng Trong Buổi Phỏng Vấn Thật!</h2>
+
+  <div class="navbar">
+    <a href="../lessons/index.html">🏠 Về Mục Lục Khóa Học</a>
+  </div>
+
+</div>
+</body>
+</html>

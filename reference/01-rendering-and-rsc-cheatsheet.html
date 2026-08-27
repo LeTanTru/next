@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheat-Sheet 01 · Rendering & RSC Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lessons/lesson.css">
+<style>
+  .cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 768px) { .cs-grid { grid-template-columns: 1fr; } }
+  .cs-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .cs-card h3 { margin-top: 0; font-size: 1.1rem; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .cs-card ul { padding-left: 18px; margin-bottom: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="lesson-tag">⚡ Quick Reference · Senior Interview Cheat-Sheet</span>
+  <h1>Rendering Engines & RSC Architecture</h1>
+  <p class="subtitle">Bảng tra cứu nhanh cú pháp, quy tắc ranh giới Server/Client và tư duy kiến trúc trả lời phỏng vấn.</p>
+
+  <div class="cs-grid">
+    <div class="cs-card">
+      <h3>1. Server vs Client Boundaries</h3>
+      <ul>
+        <li><strong>Server Component (Mặc định)</strong>: 0KB Client JS, fetch DB trực tiếp, giữ Secrets an toàn.</li>
+        <li><strong>Client Component (`'use client'`)</strong>: Dùng cho Hooks (`useState`, `useEffect`), Event Listeners (`onClick`), Browser APIs.</li>
+        <li><strong>Serialization Boundary</strong>: Props truyền qua ranh giới phải serialize được (No Functions, No Classes).</li>
+        <li><strong>Slot Pattern</strong>: Truyền Server Component dạng <code>children</code> prop vào Client Component để giữ nguyên trạng thái Server.</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>2. Dynamic Functions (Trigger Dynamic SSR)</h3>
+      <ul>
+        <li><code>cookies()</code> từ <code>next/headers</code></li>
+        <li><code>headers()</code> từ <code>next/headers</code></li>
+        <li>Prop <code>searchParams</code> trong <code>page.tsx</code></li>
+        <li><code>fetch(url, { cache: 'no-store' })</code> hoặc <code>revalidate: 0</code></li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>3. Revalidation & ISR Syntax</h3>
+      <ul>
+        <li><code>export const revalidate = 60;</code> (Time-based ISR)</li>
+        <li><code>fetch(url, { next: { tags: ['posts'] } })</code> (Tag-based)</li>
+        <li><code>revalidateTag('posts')</code> (On-Demand từ Server Action)</li>
+        <li><code>revalidatePath('/blog')</code> (Clear cache theo URL)</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>4. Streaming & PPR (Next.js 15)</h3>
+      <ul>
+        <li><code>loading.tsx</code>: Tự động bọc Suspense fallback quanh page.tsx.</li>
+        <li><code>&lt;Suspense fallback={...}&gt;</code>: Granular Streaming từng phần.</li>
+        <li><code>Promise.all([p1, p2])</code>: Triệt tiêu nghẽn Waterfall Fetch.</li>
+        <li><code>PPR (Partial Prerendering)</code>: Static Shell (CDN 0ms) + Dynamic Holes (Streamed).</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Bí Quyết Trả Lời Phỏng Vấn (Senior Cheat-Sheet)</h2>
+
+  <div class="callout why">
+    <div class="ct">🎯 3 Câu hỏi "Bẫy" hay gặp nhất:</div>
+    <p>1. <strong>"Client Component có phải chỉ render ở Browser không?"</strong><br>
+    -> <em>Trả lời:</em> KHÔNG! Client Component vẫn được pre-render thành HTML ở Server (SSR), sau đó Hydrate ở Browser.<br><br>
+    2. <strong>"Làm sao tránh Waterfall Fetch?"</strong><br>
+    -> <em>Trả lời:</em> Dùng <code>Promise.all()</code> để fetch song song hoặc tách nhỏ component lồng <code>&lt;Suspense&gt;</code>.<br><br>
+    3. <strong>"Stale-While-Revalidate của ISR hoạt động ra sao khi cache hết hạn?"</strong><br>
+    -> <em>Trả lời:</em> Trả về dữ liệu cũ (Stale) lập tức cho user đầu tiên, kích hoạt Background Rebuild, user sau nhận dữ liệu mới.</p>
+  </div>
+
+  <div class="navbar">
+    <a href="../lessons/index.html">🏠 Về Mục Lục Khóa Học</a>
+  </div>
+
+</div>
+</body>
+</html>

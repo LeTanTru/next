@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheat-Sheet 03 · Performance & Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../lessons/lesson.css">
+<style>
+  .cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 768px) { .cs-grid { grid-template-columns: 1fr; } }
+  .cs-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .cs-card h3 { margin-top: 0; font-size: 1.1rem; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .cs-card ul { padding-left: 18px; margin-bottom: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="lesson-tag">⚡ Quick Reference · Senior Interview Cheat-Sheet</span>
+  <h1>Performance Optimizations & Security Architecture</h1>
+  <p class="subtitle">Bảng tra cứu nhanh về Hydration Mismatch, Core Web Vitals, Auth Sessions và Secrets Protection.</p>
+
+  <div class="cs-grid">
+    <div class="cs-card">
+      <h3>1. Hydration Mismatch Solutions</h3>
+      <ul>
+        <li><strong>Nguyên nhân</strong>: `new Date()`, `Math.random()`, window/localStorage ở render phase, lồng HTML sai quy chuẩn.</li>
+        <li><strong>Fix 1 (Side-effects)</strong>: Đưa logic đọc Date/Storage vào `useEffect()`.</li>
+        <li><strong>Fix 2 (Attribute)</strong>: Dùng `suppressHydrationWarning` cho 1 tag cụ thể.</li>
+        <li><strong>Fix 3 (Dynamic)</strong>: `dynamic(() => import(...), { ssr: false })` ngắt SSR.</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>2. Core Web Vitals Targets</h3>
+      <ul>
+        <li><strong>LCP (&lt; 2.5s)</strong>: Preload LCP image với `priority`, dùng Streaming SSR Static Shell.</li>
+        <li><strong>INP (&lt; 200ms)</strong>: Thay thế FID cũ, cắt giảm Long Tasks Main Thread, dùng `useTransition`.</li>
+        <li><strong>CLS (&lt; 0.1)</strong>: Cố định width/height ảnh, dùng `next/font` (display: swap).</li>
+        <li><strong>Measurement</strong>: Tích hợp `useReportWebVitals` hook.</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>3. Auth & Session Architecture</h3>
+      <ul>
+        <li><strong>HttpOnly Cookie</strong>: Chuẩn an toàn duy nhất cho SSR/RSC (chống XSS, tự động đính kèm request).</li>
+        <li><strong>Auth.js v5</strong>: Lấy session ở Server Component qua `await auth()`.</li>
+        <li><strong>Middleware Wall</strong>: Filter cookie tồn tại sơ bộ ở Edge CDN.</li>
+        <li><strong>Page Level RBAC</strong>: Check quyền chi tiết tại Server Component / Database level.</li>
+      </ul>
+    </div>
+
+    <div class="cs-card">
+      <h3>4. Security & Secrets Protection</h3>
+      <ul>
+        <li><strong>`import 'server-only'`</strong>: Đặt ở đầu file secret để báo lỗi Build Error nếu nhầm sang Client Component.</li>
+        <li><strong>Env Variables</strong>: `NEXT_PUBLIC_` nạp vào Client bundle; không có tiền tố CHỈ tồn tại ở Server.</li>
+        <li><strong>CSRF Protection</strong>: Server Actions tự kiểm tra Host & Origin headers.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Bí Quyết Phỏng Vấn (Senior Cheat-Sheet)</h2>
+
+  <div class="callout why">
+    <div class="ct">🎯 3 Câu hỏi "Xương Sẩu" trong phỏng vấn:</div>
+    <p>1. <strong>"Tại sao không lưu JWT vào LocalStorage?"</strong> -> XSS trộm được token và Server Component không đọc được LocalStorage.<br><br>
+    2. <strong>"Vì sao Google bỏ FID thay bằng INP?"</strong> -> FID chỉ đo tương tác đầu tiên; INP đo độ trễ của MỌI tương tác trên trang.<br><br>
+    3. <strong>"Làm sao đảm bảo 100% không rò rỉ DB Secret Key xuống Client?"</strong> -> Dùng package <code>server-only</code> ở đầu file secret và không gắn tiền tố <code>NEXT_PUBLIC_</code>.</p>
+  </div>
+
+  <div class="navbar">
+    <a href="../lessons/index.html">🏠 Về Mục Lục Khóa Học</a>
+  </div>
+
+</div>
+</body>
+</html>

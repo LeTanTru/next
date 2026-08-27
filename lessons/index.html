@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lộ Trình Next.js 16 & React 19.2 Interview Mastery (Middle / Senior Level)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson.css">
+<style>
+  .hero { text-align: center; margin-bottom: 20px; }
+  .hero h1 { font-size: 2.35rem; line-height: 1.25; margin: 16px 0 10px; }
+  .progress-wrap { margin: 26px 0 36px; }
+  .progress-bar { height: 10px; background: var(--bg-card); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 999px; transition: width .3s ease; }
+  .progress-label { text-align: center; color: var(--accent); font-weight: 600; font-size: 14.5px; margin-top: 10px; }
+  .module { margin: 36px 0; background: rgba(28,32,48,.35); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; }
+  .module-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+  .module-num { font-family: var(--mono); color: var(--accent); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+  .module h2 { border: none; margin: 6px 0 4px; padding: 0; font-size: 1.4rem; color: #fff; }
+  .module-why { color: var(--text-soft); font-size: 14.5px; margin: 0 0 16px; line-height: 1.6; }
+  .lessons-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .lesson-item {
+    border-radius: 12px; border: 1px solid var(--border); background: var(--bg-soft);
+    padding: 14px 16px; transition: all .2s ease;
+  }
+  .lesson-item:hover { border-color: rgba(56,189,248,.45); background: var(--bg-card); transform: translateY(-1px); }
+  .lesson-link {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 15.5px; font-weight: 600; color: var(--text);
+    text-decoration: none; border-bottom: none;
+  }
+  .lesson-link:hover { color: var(--accent); border-bottom: none; }
+  .lesson-desc { color: var(--text-soft); font-size: 13.5px; margin: 6px 0 0 0; line-height: 1.55; }
+  .interview-tag {
+    display: inline-flex; align-items: baseline; gap: 6px; margin-top: 8px; padding: 5px 10px;
+    background: rgba(251,191,36,.08); border-left: 3px solid var(--amber); border-radius: 6px;
+    font-size: 13px; color: #fde68a; line-height: 1.5;
+  }
+  .interview-tag strong { color: var(--amber); font-size: 12.5px; text-transform: uppercase; letter-spacing: .03em; }
+  .badge { font-family: var(--mono); font-size: 12px; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; font-weight: 600; }
+  .badge.now  { background: rgba(56,189,248,.2); color: var(--accent); border: 1px solid rgba(56,189,248,.4); }
+  .badge.soon { background: rgba(107,118,144,.18); color: var(--text-dim); border: 1px solid rgba(107,118,144,.25); }
+  .badge.done { background: rgba(74,222,128,.15); color: var(--green); border: 1px solid rgba(74,222,128,.3); }
+  .badge.ref  { background: rgba(167,139,250,.18); color: var(--accent-2); border: 1px solid rgba(167,139,250,.35); }
+  .intro-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: var(--radius); padding: 18px 22px; margin-bottom: 20px; font-size: 15px;
+  }
+  .ref-box {
+    margin-top: 16px; padding: 12px 16px; background: rgba(167,139,250,.07);
+    border: 1px dashed rgba(167,139,250,.4); border-radius: 10px; font-size: 14.5px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ref-box a { font-weight: 600; color: var(--accent-2); }
+  .ref-box a:hover { color: #fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <span class="lesson-tag">⚡ Next.js 16 & React 19.2 · Middle & Senior Interview Mastery</span>
+    <h1>Lộ Trình Next.js 16 Interview Mastery</h1>
+    <p class="subtitle">Trọn bộ 22 bài học chuyên sâu + 4 Cheat-Sheets tra cứu nhanh trước khi phỏng vấn.</p>
+  </div>
+
+  <div class="intro-card">
+    <strong>💡 Phương pháp tiếp cận (Chuẩn Next.js 16 Official):</strong> Mỗi bài tập trung 1 chủ đề chuyên sâu duy nhất — giải thích bản chất <em>Why & Tradeoffs</em>, cập nhật kiến trúc mới nhất của <strong>Next.js 16 (Turbopack Default, "use cache" & Cache Components, updateTag vs revalidateTag, proxy.ts thay thế middleware.ts, after() API, Async Request APIs)</strong> & <strong>React 19.2 (React Compiler, &lt;Activity /&gt;, Actions API)</strong>, kèm bài tập thực hành cô đọng và phân tích <strong>"Góc Phỏng Vấn Thực Chiến"</strong> theo góc nhìn Senior / Tech Lead.
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" style="width: 5%"></div></div>
+    <div class="progress-label">🚀 Lộ trình Next.js 16: 22 bài học chuyên sâu · Sẵn sàng khởi động!</div>
+  </div>
+
+  <!-- MODULE 0 -->
+  <div class="module">
+    <div class="module-head"><span class="module-num">Module 0</span></div>
+    <h2>Setup Môi Trường & Mental Model Kiến Trúc</h2>
+    <p class="module-why">Chuẩn bị sân tập thực hành thực tế trên máy thật (Next.js 16 + React 19.2 + Turbopack Default, Node.js &ge; 20.9) và thiết lập tư duy tổng quan so sánh App Router vs Pages Router.</p>
+    <ul class="lessons-list">
+      <li class="lesson-item">
+        <a class="lesson-link" href="0000-setup-environment.html">
+          <span class="badge now">Bài 00</span>
+          <span>Dựng sân tập Next.js 16 & Kiểm tra tiền đề môi trường máy thật</span>
+        </a>
+        <p class="lesson-desc">Khởi tạo môi trường Next.js 16, TypeScript Strict 5.1+, Turbopack File System Caching, React 19.2; kiểm tra sanity check trên máy thật.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> Kiến trúc Next.js 16: Turbopack default build performance, File System Caching, quản lý biến môi trường an toàn và DevTools MCP.
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0001-app-router-vs-pages-router.html">
+          <span class="badge soon">Bài 01</span>
+          <span>App Router vs Pages Router Architecture: Sự thay đổi Paradigm & Request Lifecycle trong Next.js 16</span>
+        </a>
+        <p class="lesson-desc">Phân tích sự dịch chuyển từ Page-centric sang Component-centric; cơ chế lồng Layouts và luồng xử lý Request trên Server.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Tại sao Vercel tạo ra App Router và chuẩn hóa Next.js 16? Khi nào một dự án lớn NÊN hoặc KHÔNG NÊN migrate từ Pages sang App Router?"
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- MODULE 1 -->
+  <div class="module">
+    <div class="module-head"><span class="module-num">Module 1</span></div>
+    <h2>React Server Components & Next.js 16 Rendering Internals</h2>
+    <p class="module-why">Nắm vững bản chất RSC, Serialization, Boundaries, Async Request APIs và mô hình Cache Components mới của Next.js 16.</p>
+    <ul class="lessons-list">
+      <li class="lesson-item">
+        <a class="lesson-link" href="0002-rsc-vs-client-components.html">
+          <span class="badge soon">Bài 02</span>
+          <span>React Server Components (RSC) vs Client Components: Serialization, Boundaries & Bundle Impact</span>
+        </a>
+        <p class="lesson-desc">Bản chất RSC Payload wire-format, ranh giới `"use client"`, quy tắc truyền props serializable và tối ưu bundle size.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Tại sao không thể import Server Component vào Client Component? Phân tích pattern truyền `children` / `slots` để giải quyết."
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0003-async-request-apis-and-dynamic-rendering.html">
+          <span class="badge soon">Bài 03</span>
+          <span>Async Request APIs & Dynamic Rendering trong Next.js 16: `await cookies()`, `headers()`, `params` & `connection()`</span>
+        </a>
+        <p class="lesson-desc">Cơ chế Asynchronous Request Handling trong Next.js 16: Tách bạch Prerendering và Runtime Rendering; kiểm soát Dynamic Rendering với `connection()`.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Vì sao Next.js 16 chuyển Request APIs sang Async? Làm sao phát hiện và ngăn chặn việc vô tình biến route Static thành Dynamic?"
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0004-streaming-ssr-and-suspense.html">
+          <span class="badge soon">Bài 04</span>
+          <span>Streaming SSR & Suspense Architecture: Selective Hydration & Giải mã Bottleneck Waterfall</span>
+        </a>
+        <p class="lesson-desc">Cách máy chủ stream từng mẩu HTML qua Chunked Transfer Encoding; Selective Hydration trong React 19.2 và phá vỡ Data Waterfall.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Phân tích cách Streaming SSR tối ưu TTFB và FCP. Suspense giải quyết bài toán Data Waterfall trên Server như thế nào?"
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0005-cache-components-and-use-cache.html">
+          <span class="badge soon">Bài 05</span>
+          <span>Cache Components & `"use cache"` Directive: Tái Định Hình Hybrid Prerendering & Instant Navigations</span>
+        </a>
+        <p class="lesson-desc">Tìm hiểu mô hình Cache Components của Next.js 16: Sử dụng `"use cache"` ở mức component & hàm; tích hợp Instant Navigations mà không cần cấu hình phức tạp.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Mô hình Cache Components (`use cache`) giải quyết bài toán caching tốt hơn Partial Prerendering (PPR) thử nghiệm cũ như thế nào?"
+        </div>
+      </li>
+    </ul>
+    <div class="ref-box">
+      <span>📑 <strong>Cheat-Sheet Tra Cứu Nhanh Module 1:</strong> Rendering, RSC & Cache Components</span>
+      <a href="../reference/01-rendering-and-rsc-cheatsheet.html">Xem Cheat-Sheet 01 →</a>
+    </div>
+  </div>
+
+  <!-- MODULE 2 -->
+  <div class="module">
+    <div class="module-head"><span class="module-num">Module 2</span></div>
+    <h2>Routing Architecture, Layouts & Runtimes</h2>
+    <p class="module-why">Làm chủ các pattern định tuyến nâng cao trong App Router, `proxy.ts` (chuẩn thay thế `middleware.ts`), và sự khác biệt giữa Node.js vs Edge Runtime.</p>
+    <ul class="lessons-list">
+      <li class="lesson-item">
+        <a class="lesson-link" href="0006-layouts-templates-and-route-groups.html">
+          <span class="badge soon">Bài 06</span>
+          <span>Layouts, Templates, Route Groups `(group)` & Lifecycle phân rã UI</span>
+        </a>
+        <p class="lesson-desc">Phân biệt Preserving State của `layout.tsx` và Re-mounting của `template.tsx`; tổ chức kiến trúc clean architecture với Route Groups.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Sự khác nhau bản chất giữa `layout.tsx` và `template.tsx`? Khi nào bắt buộc phải dùng `template.tsx` (vd animation, page analytics)?"
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0007-parallel-and-intercepting-routes.html">
+          <span class="badge soon">Bài 07</span>
+          <span>Parallel Routes (`@slot`, `default.js`) & Intercepting Routes (`(.)`, `(..)`): Pattern Modal URL-Shareable</span>
+        </a>
+        <p class="lesson-desc">Kỹ thuật tạo Photo/Auth Modal có URL riêng biệt, hỗ trợ share link, F5 refresh giữ nguyên trạng thái với `default.js`.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Giải thích Soft Navigation vs Hard Navigation với Intercepting Routes. Vì sao thiếu `default.js` lại gây lỗi 404 khi người dùng F5?"
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0008-proxy-and-route-handlers-runtimes.html">
+          <span class="badge soon">Bài 08</span>
+          <span>`proxy.ts` (Thay Thế `middleware.ts`), Route Handlers & Node.js vs Edge Runtime Tradeoffs</span>
+        </a>
+        <p class="lesson-desc">Xây dựng Network Boundary với `proxy.ts` trong Next.js 16; di chuyển từ `middleware.ts`; phân tích giới hạn V8 Isolates so với Node.js Runtime.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Tại sao Next.js 16 đổi `middleware.ts` thành `proxy.ts`? Giới hạn Edge Runtime khi dùng thư viện Native và giải pháp thay thế."
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- MODULE 3 -->
+  <div class="module">
+    <div class="module-head"><span class="module-num">Module 3</span></div>
+    <h2>Data Fetching, Next.js 16 Caching & Server Actions</h2>
+    <p class="module-why">Giải phẫu hệ thống Caching Next.js 16 (`updateTag`, `revalidateTag(tag, profile)`, `"use cache"`), Server Actions và React 19 State.</p>
+    <ul class="lessons-list">
+      <li class="lesson-item">
+        <a class="lesson-link" href="0009-nextjs-16-caching-deep-dive.html">
+          <span class="badge soon">Bài 09</span>
+          <span>Giải phẫu Caching Next.js 16: `updateTag()` (Strong Consistency) vs `revalidateTag(tag, profile)` (SWR)</span>
+        </a>
+        <p class="lesson-desc">Làm chủ các chiến lược Cache Invalidation trong Next.js 16: Khi nào dùng `updateTag` trong Server Actions và khi nào dùng `revalidateTag(tag, 'max')` cho background updates.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "So sánh chi tiết `updateTag` vs `revalidateTag`. Trong một sàn TMĐT 1 triệu sản phẩm, bạn thiết kế chiến lược Cache Invalidation như thế nào?"
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0010-server-actions-and-react19-mutations.html">
+          <span class="badge soon">Bài 10</span>
+          <span>Server Actions & React 19 Actions API (`useActionState`, `useOptimistic`, `useFormStatus`)</span>
+        </a>
+        <p class="lesson-desc">Xử lý Form Mutations, Progressive Enhancement (chạy cả khi tắt JS), Optimistic UI cập nhật tức thì trước khi server phản hồi.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Server Actions chạy như thế nào dưới dạng POST Request? Làm thế nào để bảo mật Server Actions và ngăn chặn CSRF / Unauthorized Execution?"
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0011-state-management-strategies.html">
+          <span class="badge soon">Bài 11</span>
+          <span>Chiến Lược Quản Lý State: URL SearchParams, Server State (RSC) vs Client Store (Zustand/Context)</span>
+        </a>
+        <p class="lesson-desc">Tư duy đưa State lên URL (Single Source of Truth cho Filter, Pagination); khi nào nên dùng Zustand và khi nào chỉ cần Server Component.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Tại sao đưa state lên URL SearchParams lại là Senior pattern? Cách sync state mượt mà giữa Server Component và Client Store."
+        </div>
+      </li>
+    </ul>
+    <div class="ref-box">
+      <span>📑 <strong>Cheat-Sheet Tra Cứu Nhanh Module 2 & 3:</strong> Routing, Caching & Server Actions</span>
+      <a href="../reference/02-routing-caching-actions-cheatsheet.html">Xem Cheat-Sheet 02 →</a>
+    </div>
+  </div>
+
+  <!-- MODULE 4 -->
+  <div class="module">
+    <div class="module-head"><span class="module-num">Module 4</span></div>
+    <h2>Hydration, Performance & Core Web Vitals</h2>
+    <p class="module-why">Chẩn đoán và khắc phục lỗi Hydration Mismatch, tối ưu tài nguyên (Turbopack Analyzer, Images, Fonts) và làm chủ Core Web Vitals (INP, LCP, CLS).</p>
+    <ul class="lessons-list">
+      <li class="lesson-item">
+        <a class="lesson-link" href="0012-hydration-mismatch-debugging.html">
+          <span class="badge soon">Bài 12</span>
+          <span>Hydration Mismatch & Errors: Nguyên Nhân Gốc Rễ (Root Cause) & React 19.2 Hydration Diffing</span>
+        </a>
+        <p class="lesson-desc">Chẩn đoán lỗi Date/Time, LocalStorage, thẻ HTML lồng sai quy chuẩn (`<p>` trong `<p>`, `<tr>` ngoài `<tbody>`); kỹ thuật khắc phục triệt để.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Gặp lỗi Hydration Mismatch do Date/Time hoặc LocalStorage, bạn xử lý thế nào? Tại sao `suppressHydrationWarning` là con dao hai lưỡi?"
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0013-builtin-optimizations-images-fonts-scripts.html">
+          <span class="badge soon">Bài 13</span>
+          <span>Next.js Built-in Optimizations: `next/image`, `next/font`, `next/script` & Turbopack Analyzer</span>
+        </a>
+        <p class="lesson-desc">Cơ chế tối ưu ảnh on-demand (AVIF/WebP, resizing), zero-layout-shift với Google/Local Fonts và phân tích bundle với Turbopack.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Cơ chế Optimize On-demand của `next/image` hoạt động ra sao? Cách cấu hình Remote Patterns an toàn và ngăn chặn DoS qua Image Optimization."
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0014-core-web-vitals-inp-lcp-cls.html">
+          <span class="badge soon">Bài 14</span>
+          <span>Core Web Vitals 2025/2026: Chiến Lược Tối Ưu INP (Interaction to Next Paint), LCP và CLS</span>
+        </a>
+        <p class="lesson-desc">Đo đạc và tối ưu INP (thay thế FID) cho các thao tác gõ phím/click; phân rã Long Tasks trên main thread; kỹ thuật kéo điểm LCP &lt; 1.5s.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "INP đánh giá điều gì và khác gì so với FID cũ? Làm thế nào để phân rã Long Tasks trên Client để đạt INP &lt; 200ms?"
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0015-background-tasks-with-after-and-activity.html">
+          <span class="badge soon">Bài 15</span>
+          <span>Background Tasks với `after()` API & React 19.2 `&lt;Activity /&gt;` Offscreen Rendering</span>
+        </a>
+        <p class="lesson-desc">Tối ưu TTFB bằng cách đưa Analytics, Logging, Webhook sync chạy ngầm SAU KHI response stream xong; duy trì state ngầm với `&lt;Activity /&gt;`.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Khi nào nên dùng `after()` thay vì `waitUntil()`? Nguyên tắc đọc request-specific headers/cookies trước khi đưa vào `after()`."
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- MODULE 5 -->
+  <div class="module">
+    <div class="module-head"><span class="module-num">Module 5</span></div>
+    <h2>Security, Authentication & Architectural System Design</h2>
+    <p class="module-why">Bảo mật ứng dụng Next.js, kiến trúc Authentication (Cookie vs JWT), server-only secrets, Taint APIs và Migration sang Next.js 16 không gián đoạn.</p>
+    <ul class="lessons-list">
+      <li class="lesson-item">
+        <a class="lesson-link" href="0016-authentication-authorization-patterns.html">
+          <span class="badge soon">Bài 16</span>
+          <span>Authentication & Authorization Patterns: Cookie-based Sessions & Auth.js v5 trên RSC Boundary</span>
+        </a>
+        <p class="lesson-desc">Triển khai Auth an toàn trên Server Components & `proxy.ts`; tránh bẫy ủy quyền trong `layout.tsx`; bảo vệ Route Handlers & Server Actions.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Lỗ hổng bảo mật nghiêm trọng: Tại sao CẤM kiểm tra Authorization chỉ trong `layout.tsx`? Cách xây dựng Data Access Layer (DAL) chuẩn."
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0017-security-best-practices-and-secrets.html">
+          <span class="badge soon">Bài 17</span>
+          <span>Security Best Practices: CSRF, XSS, CSP, React Taint APIs & Quản Lý Secrets với `server-only`</span>
+        </a>
+        <p class="lesson-desc">Ngăn chặn rò rỉ API Keys và Private Data xuống RSC Payload bằng `server-only` và `experimental_taintObjectReference`; cấu hình CSP Headers.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Làm thế nào để đảm bảo không một token nhạy cảm nào bị vô tình bundle và serialize xuống Client qua RSC payload?"
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0018-migration-to-nextjs-16.html">
+          <span class="badge soon">Bài 18</span>
+          <span>Migration Strategy: Kế Hoạch Nâng Cấp Lên Next.js 16 & `proxy.ts` Zero-Downtime</span>
+        </a>
+        <p class="lesson-desc">Chiến lược di chuyển từ Pages Router và Next.js cũ sang Next.js 16; sử dụng `@next/codemod middleware-to-proxy` và chuyển đổi Async APIs.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Thiết kế kế hoạch nâng cấp một hệ thống production lớn lên Next.js 16 mà không làm gián đoạn người dùng hoặc gãy caching."
+        </div>
+      </li>
+    </ul>
+    <div class="ref-box">
+      <span>📑 <strong>Cheat-Sheet Tra Cứu Nhanh Module 4 & 5:</strong> Performance, Security & Architecture</span>
+      <a href="../reference/03-performance-security-cheatsheet.html">Xem Cheat-Sheet 03 →</a>
+    </div>
+  </div>
+
+  <!-- MODULE 6 -->
+  <div class="module">
+    <div class="module-head"><span class="module-num">Module 6</span></div>
+    <h2>System Design, Mock Interview & Live Coding Challenges</h2>
+    <p class="module-why">Thực chiến thiết kế hệ thống quy mô lớn, luyện tập các câu hỏi phỏng vấn bẫy và thử thách Live Coding refactoring code lỗi.</p>
+    <ul class="lessons-list">
+      <li class="lesson-item">
+        <a class="lesson-link" href="0019-system-design-ecommerce-dashboard.html">
+          <span class="badge soon">Bài 19</span>
+          <span>System Design Scenario: Thiết Kế Hệ Thống E-Commerce / Dashboard Scale Lớn với Next.js 16</span>
+        </a>
+        <p class="lesson-desc">Thiết kế kiến trúc cho trang Product Detail (1M SKU, dynamic pricing theo user, static SEO cache, Cache Components, global CDN edge proxy).</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Trình bày kiến trúc cho trang E-Commerce chịu tải 50,000 req/s dịp Flash Sale với Next.js 16 & Serverless/Edge."
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0020-mock-interview-trick-questions.html">
+          <span class="badge soon">Bài 20</span>
+          <span>Mock Interview Senior Part 1: Top 20 Câu Hỏi Phỏng Vấn Bẫy & Tình Huống Kịch Bản (Scenario-Based)</span>
+        </a>
+        <p class="lesson-desc">Bộ câu hỏi đào sâu về race conditions, waterfall fetches, server action closures, caching bugs, dynamic rendering bailouts.</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "20 câu hỏi bẫy thường gặp nhất trong vòng phỏng vấn Technical & System Design của các Tech Lead."
+        </div>
+      </li>
+      <li class="lesson-item">
+        <a class="lesson-link" href="0021-live-coding-refactoring-challenge.html">
+          <span class="badge soon">Bài 21</span>
+          <span>Mock Interview Senior Part 2: Live Code Refactoring & Debugging Challenge</span>
+        </a>
+        <p class="lesson-desc">Thử thách refactor một codebase Next.js 16 bị lỗi nghiêm trọng (Hydration bug, Waterfall data fetching, Client component bleed, Memory leak).</p>
+        <div class="interview-tag">
+          <strong>Góc Phỏng Vấn:</strong> "Mô phỏng bài test Live Coding 45 phút: Tìm lỗi, giải thích nguyên nhân và refactor code theo chuẩn Senior."
+        </div>
+      </li>
+    </ul>
+    <div class="ref-box">
+      <span>📑 <strong>Cheat-Sheet Tra Cứu Nhanh Module 6:</strong> System Design & Live Coding Cheat-Sheet</span>
+      <a href="../reference/04-system-design-mock-interview-cheatsheet.html">Xem Cheat-Sheet 04 →</a>
+    </div>
+  </div>
+
+  <p class="try-it" style="text-align:center; margin-top:40px;">
+    🎯 <strong>Tất cả bài học được thiết kế để đưa bạn từ nền tảng vững chắc lên trình độ Senior Next.js 16 Architect!</strong>
+  </p>
+</div>
+<script src="lesson-enhance.js"></script>
+</body>
+</html>
